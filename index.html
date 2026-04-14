@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Dashboard & Task Tracker</title>
+    <style>
+        /* Langkah 3: CSS (The Skin) */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            display: flex; /* Flexbox agar rapi [cite: 14] */
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .app-container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px; /* Sudut tumpul [cite: 16] */
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1); /* Elemen melayang [cite: 16] */
+            width: 90%; /* Lebar HP [cite: 14] */
+            max-width: 400px; /* Lebar Desktop [cite: 14] */
+            text-align: center;
+        }
+
+        h1 { color: #333; }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        /* Feedback visual sesuai materi penting [cite: 17] */
+        button:hover {
+            background-color: #218838;
+            opacity: 0.9;
+        }
+
+        #statusMessage { margin-top: 15px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <h1>🚀 My Daily Tasks</h1>
+    <form id="taskForm">
+        <input type="text" name="tugas" id="taskInput" placeholder="Apa rencana hari ini?" required>
+        
+        <select name="kategori">
+            <option value="Sekolah">Sekolah</option>
+            <option value="Hobi">Hobi</option>
+        </select>
+        
+        <button type="submit">Tambah Tugas</button>
+    </form>
+    
+    <div id="statusMessage"></div>
+</div>
+
+<script>
+    // Langkah 4: JavaScript (The Brain) [cite: 18]
+    const taskForm = document.getElementById('taskForm');
+    
+    // Masukkan URL API yang kamu dapatkan tadi di sini
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyPqoC0sg6wPvvU_KIaZeP4CUbCsjA3UfGOEDrOykU6c7SypMRgkO6IHfTBwobXyUKc/exec';
+
+    taskForm.addEventListener('submit', function(e) {
+        e.preventDefault(); // Mencegah reload halaman [cite: 22]
+        
+        const formData = new FormData(this);
+        const status = document.getElementById('statusMessage');
+        
+        status.innerText = "⏳ Sedang menyimpan..."; // Feedback saat menunggu [cite: 25]
+
+        // Menggunakan Fetch API (AJAX) [cite: 20]
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            body: formData
+        })
+        .then(res => {
+            status.innerText = "✅ Data berhasil masuk ke Spreadsheet!"; // [cite: 25]
+            taskForm.reset(); // Kosongkan form kembali [cite: 25]
+        })
+        .catch(err => {
+            status.innerText = "❌ Waduh, ada error!"; // [cite: 26]
+        });
+    });
+</script>
+
+</body>
+</html>
